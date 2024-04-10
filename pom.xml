@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.diogenes1oliveira</groupId>
-    <artifactId>livy-basic-auth</artifactId>
+    <artifactId>hadoop-basic-auth</artifactId>
     <packaging>jar</packaging>
     <version>0.0.1</version>
-    <name>livy-basic-auth</name>
+    <name>hadoop-basic-auth</name>
     <description>
-        Livy server with HTTP basic auth
+        HTTP Basic Auth Implementation for Hadoop Security
     </description>
-    <url>https://github.com/diogenes1oliveira/livy-basic-auth</url>
+    <url>https://github.com/diogenes1oliveira/hadoop-basic-auth</url>
     <inceptionYear>2024</inceptionYear>
 
     <licenses>
@@ -32,13 +32,13 @@
     </developers>
 
     <scm>
-        <url>https://github.com/diogenes1oliveira/livy-basic-auth/tree/main</url>
-        <connection>scm:git:git://github.com/diogenes1oliveira/livy-basic-auth.git</connection>
-        <developerConnection>scm:git:ssh@github.com:diogenes1oliveira/livy-basic-auth.git</developerConnection>
+        <url>https://github.com/diogenes1oliveira/hadoop-basic-auth/tree/main</url>
+        <connection>scm:git:git://github.com/diogenes1oliveira/hadoop-basic-auth.git</connection>
+        <developerConnection>scm:git:ssh@github.com:diogenes1oliveira/hadoop-basic-auth.git</developerConnection>
     </scm>
 
     <issueManagement>
-        <url>https://github.com/diogenes1oliveira/livy-basic-auth/issues</url>
+        <url>https://github.com/diogenes1oliveira/hadoop-basic-auth/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
@@ -59,10 +59,13 @@
 
         <!-- dependency versions -->
         <slf4j.version>1.7.32</slf4j.version>
+        <hadoop.version>3.1.0</hadoop.version>
+        <bcrypt.version>0.10.2</bcrypt.version>
         <!-- test dependencies -->
         <junit.version>5.8.2</junit.version>
         <junit-pioneer.version>1.9.1</junit-pioneer.version>
         <hamcrest.version>2.2</hamcrest.version>
+        <spring-test.version>5.3.20</spring-test.version>
         <!-- plugin versions -->
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
         <failsafe-plugin.version>2.22.2</failsafe-plugin.version>
@@ -80,6 +83,27 @@
             <version>${slf4j.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>${bcrypt.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.livy/livy-api -->
+        <dependency>
+            <groupId>org.apache.livy</groupId>
+            <artifactId>livy-api</artifactId>
+            <version>0.8.0-incubating</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- test dependencies-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -115,6 +139,12 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <version>${hamcrest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-test.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

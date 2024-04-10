@@ -1,2 +1,3 @@
-# livy-basic-auth
-Livy server with HTTP basic auth
+# hadoop-basic-auth
+
+HTTP Basic Auth Implementation for Hadoop Security
