@@ -229,6 +229,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>at.favre.lib</pattern>
+                                    <shadedPattern>dev.diogenes.shaded.at.favre.lib</shadedPattern>
+                                </relocation>
+                            </relocations>
                             <filters>
                                 <filter>
                                     <artifact>*:*</artifact>
