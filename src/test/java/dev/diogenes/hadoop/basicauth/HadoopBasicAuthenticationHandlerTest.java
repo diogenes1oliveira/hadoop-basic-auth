@@ -1,32 +1,29 @@
 package dev.diogenes.hadoop.basicauth;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.hadoop.security.authentication.server.AuthenticationToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedWriter;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.nullValue;
 
 class HadoopBasicAuthenticationHandlerTest {
+    static final String HTPASSWD_TEST_RESOURCE = "htpasswd";
     static Properties props;
     static HadoopBasicAuthenticationHandler handler = new HadoopBasicAuthenticationHandler();
-
-    static final String HTPASSWD_TEST_RESOURCE = "htpasswd";
 
     @BeforeAll
     static void setUp() throws Exception {
@@ -37,6 +34,11 @@ class HadoopBasicAuthenticationHandlerTest {
         props.setProperty("htpasswd.path", htpasswdPath);
 
         handler.init(props);
+    }
+
+    static String authEncode(String userName, String password) {
+        String auth = userName + ":" + password;
+        return Base64.getEncoder().encodeToString(auth.getBytes(UTF_8));
     }
 
     @Test
@@ -85,8 +87,24 @@ class HadoopBasicAuthenticationHandlerTest {
         assertThat(response.getStatus(), equalTo(HttpServletResponse.SC_UNAUTHORIZED));
     }
 
-    static String authEncode(String userName, String password) {
-        String auth = userName + ":" + password;
-        return Base64.getEncoder().encodeToString(auth.getBytes(UTF_8));
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "",
+            "Bearer token",
+            "Invalid",
+            "Basic",
+            "Basic  =",
+            "Basic invalid",
+            "Basic dXNlcg==", // "user"
+            "Basic dXNlcjo=", // "user:"
+            "Basic OnBhc3N3b3Jk", // ":password"
+    })
+    @NullSource
+    void extractBasicAuth_ShouldReturnErrors(String headerValue) {
+        Triple<String, String, String> actual = HadoopBasicAuthenticationHandler.extractBasicAuth(headerValue);
+
+        assertThat(actual.getLeft(), is(not(emptyOrNullString())));
+        assertThat(actual.getMiddle(), is(nullValue()));
+        assertThat(actual.getRight(), is(nullValue()));
     }
 }

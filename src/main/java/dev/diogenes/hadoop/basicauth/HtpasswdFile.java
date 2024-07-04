@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,21 +15,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HtpasswdFile {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HtpasswdFile.class);
-
     public static final Pattern LINE_PATTERN = Pattern.compile("^(?<user>[a-z][a-z0-9-]+):(?<encrypted>.+)$");
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtpasswdFile.class);
     private static final char[] EMPTY_CHARS = new char[0];
-    private final String htpasswdPath;
+    private final Path htpasswdPath;
     private final Map<String, char[]> userPasswords = new ConcurrentHashMap<>(1);
 
-    public HtpasswdFile(String htpasswdPath) {
+    public HtpasswdFile(Path htpasswdPath) {
         this.htpasswdPath = htpasswdPath;
     }
 
-    public HtpasswdFile parse() {
+    public HtpasswdFile refresh() {
         Map<String, char[]> newUserPasswords = new HashMap<>();
 
-        try (BufferedReader reader = Files.newBufferedReader(Paths.get(htpasswdPath))) {
+        try (BufferedReader reader = Files.newBufferedReader(htpasswdPath)) {
             do {
                 String line = reader.readLine();
                 if (line == null) {
