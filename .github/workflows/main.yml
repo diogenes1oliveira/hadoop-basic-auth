@@ -53,17 +53,9 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Publish package
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/main'
         run: make deploy/prod
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-      - name: Create Git tag
-        uses: rickstaa/action-create-tag@v1
-        if: github.ref == 'refs/heads/main'
-        with:
-          tag: ${{ env.BUILD_VERSION }}
-          tag_exists_error: true
-          message: "release: ${{ env.BUILD_VERSION }}"
