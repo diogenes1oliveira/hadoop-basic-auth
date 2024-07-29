@@ -4,10 +4,19 @@ HTTP Basic Auth Implementation for Hadoop Security
 
 ## Usage
 
-
 ```shell
 # livy-env.sh
-export LIVY_CLASSPATH=...:hadoop-basic-auth-0.0.1.jar
+CUSTOM_LIVY_CLASSPATH=./hadoop-basic-auth-0.0.1.jar
+
+# don't forget to include all of Livy's own jars
+export LIVY_CLASSPATH="$(
+    (
+        find "$SPARK_HOME/jars" -name 'log4j-*.jar'
+        find "$LIVY_HOME/jars" "$LIVY_HOME/rsc-jars" "$LIVY_HOME/repl_2.12-jars" -name '*.jar'
+        echo "$CUSTOM_LIVY_CLASSPATH"
+    ) | paste -sd ':'
+)"
+echo >&2 "\$LIVY_CLASSPATH=$LIVY_CLASSPATH"
 ```
 
 ```properties
