@@ -4,6 +4,8 @@ HTTP Basic Auth Implementation for Hadoop Security
 
 ## Usage
 
+### Adding to service
+
 ```shell
 # livy-env.sh
 CUSTOM_LIVY_CLASSPATH=./hadoop-basic-auth-0.0.1.jar
@@ -27,4 +29,10 @@ livy.server.auth.custom.param.type = dev.diogenes.hadoop.basicauth.HadoopBasicAu
 livy.server.auth.custom.param.htpasswd.path = .htpasswd
 livy.server.auth.custom.param.realm = REALM
 livy.server.auth.custom.param.signer.secret.provider = random
+```
+
+### Generating the file
+
+```shell
+java -cp hadoop-basic-auth-0.0.1-SNAPSHOT-4.jar dev.diogenes.hadoop.basicauth.HtpasswdFile USERNAME <<<"password"
 ```
