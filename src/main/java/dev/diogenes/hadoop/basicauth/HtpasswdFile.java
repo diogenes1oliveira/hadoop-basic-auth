@@ -91,7 +91,7 @@ public class HtpasswdFile {
         } else {
             Scanner scanner = new Scanner(System.in);
             if (scanner.hasNextLine()) {
-                password = new Scanner(System.in).nextLine().trim();
+                password = scanner.nextLine().trim();
             } else {
                 password = "";
             }

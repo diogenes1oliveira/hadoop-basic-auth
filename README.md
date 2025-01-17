@@ -34,5 +34,5 @@ livy.server.auth.custom.param.signer.secret.provider = random
 ### Generating the file
 
 ```shell
-java -cp hadoop-basic-auth-0.0.1-SNAPSHOT-4.jar dev.diogenes.hadoop.basicauth.HtpasswdFile USERNAME <<<"password"
+java -cp hadoop-basic-auth-0.0.1.jar dev.diogenes.hadoop.basicauth.HtpasswdFile USERNAME <<<"password"
 ```
